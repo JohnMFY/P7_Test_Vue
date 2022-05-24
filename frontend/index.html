@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST VUE.js</title>
+</head>
+<body>
+    <main id="app">
+        <h1>Corpo : {{ group }}</h1>
+        <span v-if="posts.length < 1">Error with the API</span>
+        <span v-else>Connected with the API</span>
+        
+        <div class="post" v-for="post of posts">
+            <div>
+                <h4>{{post.user.userName}}</h4>
+            </div>
+            <h2>{{post.title}}</h2>
+            <p>{{post.content}}</p>
+        
+            <div v-for="comment of comments"> <!--  ne fonctionne pas  -->                   
+                <h4>{{post.comment.user.userName}}</h4>
+                <p>{{post.commment.content}}</p>        
+            </div>
+        </div>
+
+        <br>
+        <div >
+            <button @click="show = !show">click</button> <!-- ne fonctionne pas   -->
+            <p v-show="show">{{posts}}</p>
+        </div>
+        <br>
+            <div>
+                <label for="name">Name</label>
+                <input type="text" v-model="name" id="name" required minlength="3" maxlength="20">
+                <br>
+                {{name}}
+            </div>
+            <div>
+                <label for="city">city</label>
+                <input id="city" v-model="city" type="text" required minlength="3" maxlength="60">
+                <br>
+                {{city}}
+            </div>
+        <br>
+        <p v-if="city">you are {{name}} from {{city}}</p> <!-- ne fonctionne pas   -->
+    </main>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script>
+        const apiData = {
+            data(){
+                return{
+                    group: 'Groupomania',
+                    posts:[],
+                }
+            },
+            created(){
+            fetch('http://localhost:3000/posts')
+            .then((response) => response.json())
+            .then((json) => {this.posts = json})
+            },
+        };
+        const form ={
+            dataForm(){
+                return {
+                    name:'',
+                    city:'',
+                }
+            },
+        }
+
+        const app = Vue.createApp(apiData, form).mount('#app')
+    </script>
+</body>
+</html>
